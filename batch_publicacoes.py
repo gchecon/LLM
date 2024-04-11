@@ -24,6 +24,7 @@ def carga_url(url_entrada):
     soup_exit = BeautifulSoup(response.content, "html.parser")
     return soup_exit
 
+
 def analisa_extensao(url_arquivo):
     if not url_arquivo.endswith('.pdf') and not url_arquivo.endswith('.zip'):
         raise ValueError('Link inválido: a URL deve terminar em .pdf ou .zip')
@@ -33,15 +34,15 @@ def analisa_extensao(url_arquivo):
         return
     resposta = requests.get(url_arquivo)
     with io.BytesIO(resposta.content) as arquivo_zip:
-        with ZipFile(arquivo_zip) as zip:
+        with ZipFile(arquivo_zip) as var_zip:
             # Lista para armazenar nomes dos arquivos extraídos
             nomes_arquivos = []
-            for nome in zip.namelist():
+            for nome in var_zip.namelist():
                 # Ignora pastas
                 if not nome.endswith('/'):
                     nomes_arquivos.append(nome)
                     # Extrai o arquivo em memória
-                    zip.extract(nome)
+                    var_zip.extract(nome)
                     print(f'Gravou arquivo {nome} zipado')
 
 
@@ -72,7 +73,7 @@ def extrair_informacoes(url_inner):
                     link_pdf = imagem.find("a").get("href")
                     analisa_extensao(link_pdf)
                 else:
-                # Baixar TXT
+                    # Baixar TXT
                     texto = soup_inner.find("div", class_="publicacao_ementa")
                     if texto is not None:
                         nome_arquivo = f"{link_publicacao.split('/')[-1]}.txt"
@@ -80,9 +81,8 @@ def extrair_informacoes(url_inner):
         pagina += 1
         if pagina > pagina_final:
             break
-        print(url_inner+"?page={}".format(pagina))
-        soup = carga_url(url_inner+"?page={}".format(pagina))
-
+        print(url_inner + "?page={}".format(pagina))
+        soup = carga_url(url_inner + "?page={}".format(pagina))
 
 
 if __name__ == "__main__":
@@ -91,7 +91,7 @@ if __name__ == "__main__":
 
     try:
         url = env.get('URL_BASE')
-        dir = env.get('DIR_BASE')
+        var_dir = env.get('DIR_BASE')
     except EnvVarsLoadError as e:
         print(f"Erro ao carregar variáveis de ambiente: {e}")
         exit(1)
@@ -99,6 +99,6 @@ if __name__ == "__main__":
         print(f"Erro: {e}")
         exit(1)
 
-    os.makedirs(dir+"/downloads", exist_ok=True)
-    os.chdir(dir+"/downloads")
+    os.makedirs(var_dir + "/downloads", exist_ok=True)
+    os.chdir(var_dir + "/downloads")
     extrair_informacoes(url)
