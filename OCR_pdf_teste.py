@@ -1,58 +1,56 @@
-from tika import parser
+from tika import parser as tika_parser
+import fitz
 import os
 
-def extrair_texto_pdf(caminho_pdf):
-  """
-  Extrai texto de um PDF com imagens usando Apache Tika.
 
-  Args:
-    caminho_pdf: Caminho para o arquivo PDF.
+def verificar_imagens_no_pdf(caminho_pdf):
+    # Abre o arquivo PDF
+    doc = fitz.open(caminho_pdf)
+    tem_imagem = False
 
-  Returns:
-    Texto extraído do PDF.
-  """
+    # Verifica cada página para imagens
+    for pagina in doc:
+        if pagina.get_images(full=True):
+            tem_imagem = True
+            break
+
+    doc.close()
+    return tem_imagem
 
 
-def extrair_texto_pdf_com_imagens(caminho_arquivo):
-    # Inicializa o parser do Tika
-    parsed = parser.from_file(caminho_arquivo, serverEndpoint='http://localhost:9998/')
-
-    # Extrai o texto
-    texto_extraido = parsed["content"]
-
-    # Certifique-se de que texto_extraido não é None ou outra verificação, conforme necessário
-    if texto_extraido:
-        # Limpa espaços em branco extras
-        texto_limpo = "\n".join([linha.strip() for linha in texto_extraido.splitlines() if linha.strip()])
+def extrair_texto_pdf(caminho_pdf, caminho_saida):
+    # Verifica se há imagens no PDF
+    if verificar_imagens_no_pdf(caminho_pdf):
+        print("Imagens detectadas, realizando OCR se necessário...")
     else:
-        texto_limpo = ""
+        print("Nenhuma imagem detectada, extraindo apenas o texto...")
 
-    return texto_limpo
+    # Extrai o texto usando o Tika
+    texto_extraido = tika_parser.from_file(caminho_pdf)
+
+    # Salva o texto extraído em um arquivo txt
+    with open(caminho_saida, 'w', encoding='utf-8') as arquivo_saida:
+        arquivo_saida.write(texto_extraido['content'])
 
 
 def obter_arquivo():
-  while True:
-    caminho_pdf = input("Digite o nome do arquivo PDF: ")
-    if not os.path.exists(caminho_pdf):
-      print("Arquivo não encontrado.")
-      continue
+    while True:
+        caminho_pdf = input("Digite o nome do arquivo PDF: ")
+        if not os.path.exists(caminho_pdf):
+            print("Arquivo não encontrado.")
+            continue
 
-    if not caminho_pdf.endswith('.pdf'):
-      print("O arquivo precisa ser um PDF.")
-      continue
+        if not caminho_pdf.endswith('.pdf'):
+            print("O arquivo precisa ser um PDF.")
+            continue
 
-    return caminho_pdf
+        return caminho_pdf
 
 
 path_pdf = obter_arquivo()
-texto_extraido = extrair_texto_pdf_com_imagens(path_pdf)
 
 nome_arquivo, extensao = os.path.splitext(os.path.basename(path_pdf))
 nome_arquivo_txt = f"{nome_arquivo}.txt"
 path_arquivo_txt = os.path.join(os.path.dirname(path_pdf), nome_arquivo_txt)
 
-try:
-  with open(path_arquivo_txt, "w") as arquivo:
-    arquivo.write(texto_extraido)
-except Exception as e:
-  print(f"Erro ao salvar texto no arquivo TXT: {e}")
+extrair_texto_pdf(path_pdf, path_arquivo_txt)

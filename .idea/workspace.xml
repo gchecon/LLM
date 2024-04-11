@@ -4,7 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9654bc0b-da00-417b-8695-5cf6277ff56b" name="Changes" comment="Aplicação de PEPs" />
+    <list default="true" id="9654bc0b-da00-417b-8695-5cf6277ff56b" name="Changes" comment="Descrição de programa">
+      <change beforePath="$PROJECT_DIR$/.idea/RAG.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/RAG.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OCR_pdf_teste.py" beforeDir="false" afterPath="$PROJECT_DIR$/OCR_pdf_teste.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -36,7 +42,9 @@
   &quot;associatedIndex&quot;: 6
 }</component>
   <component name="ProjectId" id="2eoupGdxGMhDCXiSQqVStdBJ5C6" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -248,6 +256,7 @@
     <MESSAGE value="Alinhar com main" />
     <MESSAGE value="Implantado tratamento arquivos zip" />
     <MESSAGE value="Aplicação de PEPs" />
-    <option name="LAST_COMMIT_MESSAGE" value="Aplicação de PEPs" />
+    <MESSAGE value="Descrição de programa" />
+    <option name="LAST_COMMIT_MESSAGE" value="Descrição de programa" />
   </component>
 </project>
