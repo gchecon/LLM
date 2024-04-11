@@ -1,0 +1,11 @@
+# Programas
+
+### batch_publicacoes.py
+
+O programa `batch_publicacoes.py` foi desenvolvido com um propósito claro e específico: automatizar o processo de download de arquivos PDF e ementas em formato HTML disponíveis em um website específico. A URL de destino é definida através de um parâmetro de entrada, tornando o programa flexível para ser utilizado em diferentes fontes de publicações. Este utilitário é particularmente útil para profissionais e organizações que necessitam de acesso regular a documentos digitais para consulta, análise ou arquivamento.
+
+Ao ser executado, o `batch_publicacoes.py` inicia um processo de navegação pela estrutura do site indicado na URL fornecida. Ele é capaz de identificar e acessar múltiplas páginas dentro do site, se houver, garantindo que nenhum conteúdo relevante seja deixado para trás. Esta capacidade de navegar através das páginas é crucial, especialmente em sites que organizam seus documentos em uma série de páginas sequenciais para evitar sobrecarga nos servidores ou para melhorar a experiência do usuário.
+
+Para cada página visitada, o programa procura especificamente por links que direcionam para arquivos PDF e para ementas em HTML. Ao encontrar esses links, ele procede com o download de cada arquivo encontrado. Esses downloads não são realizados de maneira aleatória; em vez disso, são organizados cuidadosamente. Todos os arquivos baixados são salvos em um subdiretório chamado "downloads", localizado dentro do diretório especificado pela variável de ambiente `DIR_BASE`. Este método de organização facilita a gestão dos documentos baixados, permitindo que os usuários localizem e acessem facilmente o material necessário sem ter que navegar por uma grande quantidade de arquivos desordenados.
+
+A utilização da variável de ambiente `DIR_BASE` para determinar o diretório raiz para os downloads adiciona uma camada de personalização e flexibilidade ao programa. Isso permite que os usuários configurem o local de salvamento dos arquivos conforme suas preferências ou necessidades organizacionais, sem a necessidade de alterar o código fonte do programa. Esse recurso é particularmente benéfico em ambientes compartilhados ou em situações onde os documentos precisam ser armazenados de acordo com estruturas de diretório pré-definidas.

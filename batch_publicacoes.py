@@ -26,26 +26,42 @@ def carga_url(url_entrada):
 def extrair_informacoes(url_inner):
     soup = carga_url(url_inner)
 
-    # Percorrer as publicações
-    for publicacao in soup.find_all("div", class_="publicacao"):
-        # Obter link da publicação
-        link_publicacao = publicacao.find("a").get("href")
-        soup_inner = carga_url(link_publicacao)
+    # Verificar a última página para o loop
+    li = soup.find("li", class_="pager__item pager__item--last")
+    a = li.find('a')
+    href = a.get('href')
+    numero_pagina_final = href.split("=")[1]
+    pagina_final = int(numero_pagina_final)
+    pagina = 0
 
-        # Verificar se existe PDF
-        imagem = soup_inner.find("div", class_="publicacao_imagem")
-        if imagem:
-            # Baixar PDF
-            if imagem.find("a") is not None:
-                link_pdf = imagem.find("a").get("href")
-                nome_arquivo = link_pdf.split("/")[-1]
-                baixar_pdf(link_pdf, nome_arquivo)
-            else:
-            # Baixar TXT
-                texto = soup_inner.find("div", class_="publicacao_ementa")
-                if texto is not None:
-                    nome_arquivo = f"{link_publicacao.split('/')[-1]}.txt"
-                    baixar_txt(texto, nome_arquivo)
+    while True:
+        # Percorrer as publicações
+        print(f'Processando página {pagina}')
+        for publicacao in soup.find_all("div", class_="publicacao"):
+            # Obter link da publicação
+            link_publicacao = publicacao.find("a").get("href")
+            soup_inner = carga_url(link_publicacao)
+
+            # Verificar se existe PDF
+            imagem = soup_inner.find("div", class_="publicacao_imagem")
+            if imagem:
+                # Baixar PDF
+                if imagem.find("a") is not None:
+                    link_pdf = imagem.find("a").get("href")
+                    nome_arquivo = link_pdf.split("/")[-1]
+                    baixar_pdf(link_pdf, nome_arquivo)
+                else:
+                # Baixar TXT
+                    texto = soup_inner.find("div", class_="publicacao_ementa")
+                    if texto is not None:
+                        nome_arquivo = f"{link_publicacao.split('/')[-1]}.txt"
+                        baixar_txt(texto, nome_arquivo)
+        pagina += 1
+        if pagina > pagina_final:
+            break
+        print(url_inner+"?page={}".format(pagina))
+        soup = carga_url(url_inner+"?page={}".format(pagina))
+
 
 
 if __name__ == "__main__":
@@ -54,6 +70,7 @@ if __name__ == "__main__":
 
     try:
         url = env.get('URL_BASE')
+        dir = env.get('DIR_BASE')
     except EnvVarsLoadError as e:
         print(f"Erro ao carregar variáveis de ambiente: {e}")
         exit(1)
@@ -61,6 +78,6 @@ if __name__ == "__main__":
         print(f"Erro: {e}")
         exit(1)
 
-    os.makedirs("downloads", exist_ok=True)
-    os.chdir("downloads")
+    os.makedirs(dir+"/downloads", exist_ok=True)
+    os.chdir(dir+"/downloads")
     extrair_informacoes(url)
