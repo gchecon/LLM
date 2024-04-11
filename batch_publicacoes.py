@@ -2,6 +2,8 @@ import requests
 from bs4 import BeautifulSoup
 from classes import EnvVars, EnvVarsLoadError, EnvVarNotFoundError
 import os
+import io
+from zipfile import ZipFile
 
 
 def baixar_pdf(url_inner, nome_arquivo_inner):
@@ -21,6 +23,26 @@ def carga_url(url_entrada):
     response = requests.get(url_entrada)
     soup_exit = BeautifulSoup(response.content, "html.parser")
     return soup_exit
+
+def analisa_extensao(url_arquivo):
+    if not url_arquivo.endswith('.pdf') and not url_arquivo.endswith('.zip'):
+        raise ValueError('Link inválido: a URL deve terminar em .pdf ou .zip')
+    if url_arquivo.endswith('.pdf'):
+        nome_arquivo = url_arquivo.split("/")[-1]
+        baixar_pdf(url_arquivo, nome_arquivo)
+        return
+    resposta = requests.get(url_arquivo)
+    with io.BytesIO(resposta.content) as arquivo_zip:
+        with ZipFile(arquivo_zip) as zip:
+            # Lista para armazenar nomes dos arquivos extraídos
+            nomes_arquivos = []
+            for nome in zip.namelist():
+                # Ignora pastas
+                if not nome.endswith('/'):
+                    nomes_arquivos.append(nome)
+                    # Extrai o arquivo em memória
+                    zip.extract(nome)
+                    print(f'Gravou arquivo {nome} zipado')
 
 
 def extrair_informacoes(url_inner):
@@ -48,8 +70,7 @@ def extrair_informacoes(url_inner):
                 # Baixar PDF
                 if imagem.find("a") is not None:
                     link_pdf = imagem.find("a").get("href")
-                    nome_arquivo = link_pdf.split("/")[-1]
-                    baixar_pdf(link_pdf, nome_arquivo)
+                    analisa_extensao(link_pdf)
                 else:
                 # Baixar TXT
                     texto = soup_inner.find("div", class_="publicacao_ementa")
