@@ -1,6 +1,7 @@
 from tika import parser as tika_parser
 import fitz
 import os
+import requests
 
 
 def verificar_imagens_no_pdf(caminho_pdf):
@@ -19,14 +20,22 @@ def verificar_imagens_no_pdf(caminho_pdf):
 
 
 def extrair_texto_pdf(caminho_pdf, caminho_saida):
-    # Verifica se há imagens no PDF
-    if verificar_imagens_no_pdf(caminho_pdf):
-        print("Imagens detectadas, realizando OCR se necessário...")
-    else:
-        print("Nenhuma imagem detectada, extraindo apenas o texto...")
+    try:
+        tika_parser.ServerEndpoint = 'http://localhost:9998/'
+        # Ignora o proxy para localhost
+        session = requests.Session()
+        session.trust_env = False  # Não usa as configurações de proxy do ambiente
 
-    # Extrai o texto usando o Tika
-    texto_extraido = tika_parser.from_file(caminho_pdf)
+        # Verifica se há imagens no PDF
+        if verificar_imagens_no_pdf(caminho_pdf):
+            print("Imagens detectadas, realizando OCR se necessário...")
+        else:
+            print("Nenhuma imagem detectada, extraindo apenas o texto...")
+
+        # Extrai o texto usando o Tika
+        texto_extraido = tika_parser.from_file(caminho_pdf)
+    except Exception as e:
+        print(f'Erro ao processar o arquivo: {e}')
 
     # Salva o texto extraído em um arquivo txt
     with open(caminho_saida, 'w', encoding='utf-8') as arquivo_saida:
