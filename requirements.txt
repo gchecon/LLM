@@ -7,3 +7,5 @@ python-dotenv==1.0.1
 requests==2.31.0
 soupsieve==2.5
 urllib3==2.2.1
+
+tika~=2.6.0
